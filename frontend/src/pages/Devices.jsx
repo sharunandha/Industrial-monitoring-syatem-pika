@@ -57,7 +57,7 @@ const Devices = () => {
         <h3 className="text-xl text-white font-semibold">Registered Devices</h3>
         <div className="mt-4 overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="text-left text-slate-400">
+            <thead className="text-left text-stone-400">
               <tr>
                 <th className="pb-2">Device ID</th>
                 <th className="pb-2">Name</th>
@@ -69,11 +69,11 @@ const Devices = () => {
             <tbody>
               {devices.map((device) => (
                 <tr key={device.deviceId} className="border-t border-white/5">
-                  <td className="py-3 text-slate-100">{device.deviceId}</td>
-                  <td className="py-3 text-slate-300">{device.name}</td>
-                  <td className="py-3 text-slate-300">{device.location}</td>
-                  <td className="py-3 text-slate-300">{device.thresholds?.power}</td>
-                  <td className="py-3 text-slate-300">{device.thresholds?.temperature}</td>
+                  <td className="py-3 text-stone-100">{device.deviceId}</td>
+                  <td className="py-3 text-stone-300">{device.name}</td>
+                  <td className="py-3 text-stone-300">{device.location}</td>
+                  <td className="py-3 text-stone-300">{device.thresholds?.power}</td>
+                  <td className="py-3 text-stone-300">{device.thresholds?.temperature}</td>
                 </tr>
               ))}
             </tbody>

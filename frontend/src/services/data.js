@@ -74,8 +74,10 @@ export const fetchAdvancedAnalytics = async (deviceId, from, to) => {
     const { data } = await api.get("/api/analytics/summary", {
       params: { deviceId, from, to }
     });
+    console.log("Advanced analytics data received:", data.advanced);
     return data.advanced || {};
-  } catch {
+  } catch (err) {
+    console.error("Error fetching advanced analytics:", err);
     return {};
   }
 };

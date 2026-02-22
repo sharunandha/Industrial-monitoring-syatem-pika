@@ -1,8 +1,13 @@
 const jwt = require("jsonwebtoken");
 
+// Hardcoded admin credentials
+const ADMIN_EMAIL = "admin@iot.com";
+const ADMIN_PASSWORD = "admin123";
+const JWT_SECRET = "iot-dashboard-secret-key-2026";
+
 const createToken = (user) =>
-  jwt.sign({ email: user.email, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || "12h"
+  jwt.sign({ email: user.email, role: user.role }, JWT_SECRET, {
+    expiresIn: "12h"
   });
 
 const login = async (req, res, next) => {
@@ -12,17 +17,11 @@ const login = async (req, res, next) => {
       return res.status(400).json({ message: "Email and password required" });
     }
 
-    const adminEmail = process.env.ADMIN_EMAIL;
-    const adminPassword = process.env.ADMIN_PASSWORD;
-    if (!adminEmail || !adminPassword) {
-      return res.status(500).json({ message: "Admin credentials not configured" });
-    }
-
-    if (email.toLowerCase() !== adminEmail.toLowerCase() || password !== adminPassword) {
+    if (email.toLowerCase() !== ADMIN_EMAIL.toLowerCase() || password !== ADMIN_PASSWORD) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const user = { email: adminEmail, role: "admin" };
+    const user = { email: ADMIN_EMAIL, role: "admin" };
     const token = createToken(user);
     return res.json({ token, role: user.role, email: user.email });
   } catch (error) {

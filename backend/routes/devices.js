@@ -6,13 +6,15 @@ const {
   getDevice,
   updateDevice,
   rotateKey,
-  deleteDevice
+  deleteDevice,
+  getDeviceTypes
 } = require("../controllers/deviceController");
 
 const router = express.Router();
 
 router.use(authRequired, requireRole("admin"));
 router.get("/", listDevices);
+router.get("/types", getDeviceTypes);
 router.post("/", createDevice);
 router.get("/:deviceId", getDevice);
 router.put("/:deviceId", updateDevice);

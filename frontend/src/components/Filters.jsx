@@ -3,7 +3,7 @@ import React from "react";
 const Filters = ({ value, onChange, devices }) => (
   <div className="panel p-4 rounded-2xl flex flex-col gap-3 lg:flex-row lg:items-center">
     <div className="flex-1">
-      <label className="text-xs uppercase tracking-[0.3em] text-slate-400">Device</label>
+      <label className="text-xs uppercase tracking-[0.3em] text-stone-400">Device</label>
       <select
         value={value.deviceId}
         onChange={(event) => onChange({ ...value, deviceId: event.target.value })}
@@ -17,7 +17,7 @@ const Filters = ({ value, onChange, devices }) => (
       </select>
     </div>
     <div>
-      <label className="text-xs uppercase tracking-[0.3em] text-slate-400">From</label>
+      <label className="text-xs uppercase tracking-[0.3em] text-stone-400">From</label>
       <input
         type="date"
         value={value.from}
@@ -26,7 +26,7 @@ const Filters = ({ value, onChange, devices }) => (
       />
     </div>
     <div>
-      <label className="text-xs uppercase tracking-[0.3em] text-slate-400">To</label>
+      <label className="text-xs uppercase tracking-[0.3em] text-stone-400">To</label>
       <input
         type="date"
         value={value.to}

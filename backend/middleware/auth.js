@@ -1,5 +1,8 @@
 const jwt = require("jsonwebtoken");
 
+// Hardcoded JWT secret (must match authController.js)
+const JWT_SECRET = "iot-dashboard-secret-key-2026";
+
 const authRequired = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization || "";
@@ -11,7 +14,7 @@ const authRequired = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
     req.user = { email: decoded.email, role: decoded.role };
     return next();
   } catch (error) {

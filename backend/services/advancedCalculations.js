@@ -92,27 +92,30 @@ const calculateCostWithTariff = (rows) => {
   let offPeakEnergy = 0;
   let shoulderEnergy = 0;
 
-  // Rates: Peak (9am-9pm) = $0.20/kWh, Off-peak (9pm-9am) = $0.10/kWh, Shoulder = $0.15/kWh
-  const peakRate = 0.20;
-  const offPeakRate = 0.10;
-  const shoulderRate = 0.15;
+  // Tamil Nadu TNEB Electricity Rates (INR per kWh)
+  // Peak: 6PM-10PM (₹8.50/kWh) - High demand evening hours
+  // Off-Peak: 10PM-6AM (₹4.50/kWh) - Night hours
+  // Shoulder: 6AM-6PM (₹6.50/kWh) - Normal daytime hours
+  const peakRate = 8.50;
+  const offPeakRate = 4.50;
+  const shoulderRate = 6.50;
 
   rows.forEach((row) => {
     const hour = new Date(row.timestamp).getHours();
     const energyKwh = (row.power / 1000) * (5 / 60); // Assuming 5-minute intervals
     
-    if (hour >= 9 && hour < 17) {
-      // Peak hours (9am-5pm)
+    if (hour >= 18 && hour < 22) {
+      // Peak hours (6PM-10PM)
       peakEnergy += energyKwh;
       totalCost += energyKwh * peakRate;
-    } else if (hour >= 17 && hour < 21) {
-      // Shoulder hours (5pm-9pm)
-      shoulderEnergy += energyKwh;
-      totalCost += energyKwh * shoulderRate;
-    } else {
-      // Off-peak (9pm-9am)
+    } else if (hour >= 22 || hour < 6) {
+      // Off-peak (10PM-6AM)
       offPeakEnergy += energyKwh;
       totalCost += energyKwh * offPeakRate;
+    } else {
+      // Shoulder hours (6AM-6PM)
+      shoulderEnergy += energyKwh;
+      totalCost += energyKwh * shoulderRate;
     }
   });
 

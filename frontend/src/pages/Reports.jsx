@@ -79,7 +79,7 @@ const Reports = () => {
       </div>
       <UsageBarChart data={series} />
       <div className="panel p-4 rounded-2xl">
-        <p className="text-sm text-slate-300">
+        <p className="text-sm text-stone-300">
           Use the filters to generate hourly, daily, and monthly reports. The export uses
           the same date range.
         </p>

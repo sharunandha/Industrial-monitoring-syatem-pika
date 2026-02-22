@@ -2,10 +2,17 @@ const axios = require("axios");
 
 const baseUrl = "https://api.thingspeak.com";
 
+// Hardcoded ThingSpeak credentials
+const THINGSPEAK_CONFIG = {
+  channelId: "3262654",
+  readKey: "MQDH6IR59TOT5JF5",
+  writeKey: "03CL3839V4KA7EXL"
+};
+
 const getConfig = () => ({
-  channelId: process.env.THINGSPEAK_CHANNEL_ID,
-  readKey: process.env.THINGSPEAK_READ_KEY,
-  writeKey: process.env.THINGSPEAK_WRITE_KEY
+  channelId: THINGSPEAK_CONFIG.channelId,
+  readKey: THINGSPEAK_CONFIG.readKey,
+  writeKey: THINGSPEAK_CONFIG.writeKey
 });
 
 const ensureConfig = () => {

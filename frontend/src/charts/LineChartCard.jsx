@@ -10,7 +10,7 @@ import {
 
 const LineChartCard = ({ title, data, dataKey, stroke }) => (
   <div className="panel p-4 rounded-2xl">
-    <p className="text-xs uppercase tracking-[0.35em] text-slate-400">{title}</p>
+    <p className="text-xs uppercase tracking-[0.35em] text-stone-400">{title}</p>
     <div className="h-52 mt-4">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data}>

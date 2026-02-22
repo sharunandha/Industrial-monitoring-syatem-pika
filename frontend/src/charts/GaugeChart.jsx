@@ -21,7 +21,7 @@ const GaugeChart = ({ value, max, label, unit, color = "cyan" }) => {
 
   return (
     <div className={`panel ${theme.bg} p-6 rounded-2xl flex flex-col items-center border-2 ${theme.border} ${theme.glow} transition-all hover:scale-105`}>
-      <p className="text-xs uppercase tracking-widest text-slate-400 font-semibold">{label}</p>
+      <p className="text-xs uppercase tracking-widest text-stone-400 font-semibold">{label}</p>
       <PieChart width={220} height={140}>
         <Pie
           data={data}
@@ -38,8 +38,8 @@ const GaugeChart = ({ value, max, label, unit, color = "cyan" }) => {
       </PieChart>
       <div className="-mt-12 text-center">
         <p className={`text-3xl font-bold ${theme.text}`}>{value.toFixed(1)}</p>
-        <span className="text-xs text-slate-400">{unit}</span>
-        <p className="text-xs text-slate-500 mt-1">{percentage.toFixed(1)}% of {max}</p>
+        <span className="text-xs text-stone-400">{unit}</span>
+        <p className="text-xs text-stone-400 mt-1">{percentage.toFixed(1)}% of {max}</p>
       </div>
     </div>
   );};

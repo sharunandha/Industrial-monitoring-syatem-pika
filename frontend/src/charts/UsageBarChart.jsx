@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recha
 
 const UsageBarChart = ({ data }) => (
   <div className="panel p-4 rounded-2xl">
-    <p className="text-xs uppercase tracking-[0.35em] text-slate-400">Energy Usage</p>
+    <p className="text-xs uppercase tracking-[0.35em] text-stone-400">Energy Usage</p>
     <div className="h-52 mt-4">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data}>
