@@ -1,50 +1,59 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { Zap, LogOut, Activity } from "lucide-react";
+import { LogOut, Activity, Menu } from "lucide-react";
 import { logout } from "../services/auth";
 
-const Topbar = () => (
-  <header className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between px-6 pt-6">
-    <div className="flex items-center gap-4">
-      <motion.img 
-        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png"
-        alt="Pikachu"
-        className="w-14 h-14"
-        style={{ filter: 'drop-shadow(0 0 12px rgba(251, 191, 36, 0.6))' }}
-        animate={{ rotate: [-5, 5, -5], y: [-2, 2, -2] }}
-        transition={{ duration: 1.5, repeat: Infinity }}
+const Topbar = ({ onMenuClick }) => (
+  <header className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 bg-white border-b border-gray-200">
+    {/* Left Section */}
+    <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+      {/* Hamburger Menu - Mobile Only */}
+      <button 
+        onClick={onMenuClick}
+        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-600 flex-shrink-0"
+      >
+        <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+      </button>
+      
+      {/* Logo - Mobile */}
+      <img 
+        src="/logo.png" 
+        alt="Logo" 
+        className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover shadow-sm lg:hidden flex-shrink-0" 
       />
-      <div>
-        <p className="text-xs uppercase tracking-[0.4em] text-amber-400 flex items-center gap-2 font-semibold">
+      
+      {/* Title */}
+      <div className="min-w-0">
+        <p className="text-xs text-gray-500 items-center gap-1 hidden sm:flex">
           <Activity className="w-3 h-3" />
-          Live Thunder Operations
+          Live Monitoring
         </p>
-        <h2 className="text-2xl font-bold thunder-text">Pokemon Energy Monitor</h2>
+        <h2 className="text-sm sm:text-lg lg:text-xl font-semibold text-gray-900 truncate">
+          <span className="sm:hidden">IEMS</span>
+          <span className="hidden sm:inline">Industrial Energy Monitoring System</span>
+        </h2>
       </div>
     </div>
 
-    <div className="flex items-center gap-3">
-      <motion.div 
-        className="panel px-4 py-2 rounded-full text-xs text-amber-300 flex items-center gap-2 thunder-border font-semibold"
-        animate={{ boxShadow: ["0 0 0px rgba(251,191,36,0)", "0 0 15px rgba(251,191,36,0.4)", "0 0 0px rgba(251,191,36,0)"] }}
-        transition={{ duration: 2, repeat: Infinity }}
-      >
-        <Zap className="w-3 h-3" />
-        Pikachu Mode: Active
-      </motion.div>
-      <span className="text-xs bg-green-900/50 text-green-300 px-3 py-1 rounded-full border border-green-500/50 font-medium">
-        🇮🇳 TNEB
-      </span>
-      <motion.button
+    {/* Right Section */}
+    <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+      {/* Status Badge */}
+      <div className="hidden sm:flex px-3 py-1.5 rounded-full text-xs text-green-700 bg-green-50 border border-green-200 items-center gap-2">
+        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+        <span className="hidden md:inline">System Online</span>
+      </div>
+      
+      {/* Mobile Status Dot */}
+      <div className="sm:hidden w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+      
+      {/* Sign Out Button */}
+      <button
         type="button"
         onClick={logout}
-        className="px-4 py-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-600 text-white text-xs uppercase tracking-[0.2em] font-bold flex items-center gap-2 shadow-lg"
-        whileHover={{ scale: 1.05, boxShadow: "0 0 25px rgba(251, 191, 36, 0.6)" }}
-        whileTap={{ scale: 0.95 }}
+        className="px-2 sm:px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm font-medium flex items-center gap-2 transition"
       >
         <LogOut className="w-4 h-4" />
-        Sign Out
-      </motion.button>
+        <span className="hidden sm:inline">Sign Out</span>
+      </button>
     </div>
   </header>
 );

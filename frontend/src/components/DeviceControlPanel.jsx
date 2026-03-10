@@ -1,42 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   Power,
   Thermometer,
   Gauge,
   AlertTriangle,
   Settings,
-  Zap,
   Activity,
   Save,
-  ChevronDown
+  ChevronDown,
+  Zap
 } from "lucide-react";
 import { fetchLatest } from "../services/data";
 
 const ToggleSwitch = ({ isOn, onToggle, disabled }) => (
-  <motion.button
+  <button
     onClick={onToggle}
     disabled={disabled}
-    className={`relative w-16 h-8 rounded-full transition-colors ${
+    className={`relative w-14 h-7 rounded-full transition-colors ${
       isOn 
-        ? "bg-gradient-to-r from-yellow-400 to-amber-500 electric-pulse" 
-        : "bg-stone-700"
+        ? "bg-blue-600" 
+        : "bg-gray-300"
     } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-    whileHover={!disabled ? { scale: 1.05 } : {}}
-    whileTap={!disabled ? { scale: 0.95 } : {}}
   >
-    <motion.div
-      className="absolute top-1 w-6 h-6 rounded-full bg-white shadow-lg flex items-center justify-center"
-      animate={{ left: isOn ? "calc(100% - 28px)" : "4px" }}
-      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+    <div
+      className={`absolute top-0.5 w-6 h-6 rounded-full bg-white shadow transition-all flex items-center justify-center ${
+        isOn ? "left-7" : "left-0.5"
+      }`}
     >
       {isOn ? (
-        <Zap className="w-3 h-3 text-yellow-500 zap-icon" />
+        <Power className="w-3 h-3 text-blue-600" />
       ) : (
-        <Power className="w-3 h-3 text-stone-400" />
+        <Power className="w-3 h-3 text-gray-400" />
       )}
-    </motion.div>
-  </motion.button>
+    </div>
+  </button>
 );
 
 const DeviceControlPanel = ({ devices = [] }) => {
@@ -104,145 +101,129 @@ const DeviceControlPanel = ({ devices = [] }) => {
   };
 
   const statusColors = {
-    normal: "text-green-400 bg-green-500/20 border-green-500/30",
-    warning: "text-yellow-400 bg-yellow-500/20 border-yellow-500/30",
-    critical: "text-red-400 bg-red-500/20 border-red-500/30"
+    normal: "text-green-700 bg-green-50 border-green-200",
+    warning: "text-yellow-700 bg-yellow-50 border-yellow-200",
+    critical: "text-red-700 bg-red-50 border-red-200"
   };
 
   if (!devices.length) {
     return (
-      <motion.div className="panel p-8 rounded-2xl text-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-        <Zap className="w-16 h-16 mx-auto text-yellow-400 opacity-50 mb-4 zap-icon" />
-        <p className="text-yellow-400 text-lg font-bold">No Devices Found</p>
-        <p className="text-stone-400 mt-2">Add a device from the Devices page to control it here</p>
-      </motion.div>
+      <div className="bg-white p-8 rounded-lg border border-gray-200 text-center">
+        <Zap className="w-12 h-12 mx-auto text-gray-300 mb-4" />
+        <p className="text-gray-700 font-medium">No Devices Found</p>
+        <p className="text-gray-500 text-sm mt-2">Add a device from the Devices page to control it here</p>
+      </div>
     );
   }
 
   return (
-    <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+    <div className="space-y-4">
       {/* Header with device selector */}
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <h3 className="text-lg font-bold text-yellow-400 flex items-center gap-2 electric-text">
-          <Zap className="w-6 h-6 zap-icon" />
-          ⚡ Thunder Control Panel ⚡
+        <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+          <Settings className="w-5 h-5 text-gray-500" />
+          Control Panel
         </h3>
         <div className="flex gap-2">
           {/* Device Dropdown */}
           <div className="relative">
-            <motion.button
+            <button
               onClick={() => setShowDropdown(!showDropdown)}
-              className="px-4 py-2 panel rounded-lg flex items-center gap-2 text-yellow-300 thunder-border"
-              whileHover={{ scale: 1.02 }}
+              className="px-4 py-2 bg-white border border-gray-300 rounded-lg flex items-center gap-2 text-gray-700 hover:bg-gray-50"
             >
-              <Zap className="w-4 h-4" />
+              <Zap className="w-4 h-4 text-blue-600" />
               {selectedDevice?.name || "Select Device"}
               <ChevronDown className={`w-4 h-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />
-            </motion.button>
-            <AnimatePresence>
-              {showDropdown && (
-                <motion.div
-                  className="absolute top-full mt-2 w-full panel rounded-lg overflow-hidden z-50 border border-yellow-500/30"
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                >
-                  {devices.map(device => (
-                    <button
-                      key={device.deviceId}
-                      onClick={() => { setSelectedDeviceId(device.deviceId); setShowDropdown(false); }}
-                      className={`w-full px-4 py-2 text-left hover:bg-yellow-500/10 flex items-center gap-2 ${
-                        device.deviceId === selectedDeviceId ? "bg-yellow-500/20 text-yellow-300" : "text-stone-300"
-                      }`}
-                    >
-                      <Zap className="w-3 h-3" />
-                      {device.name}
-                    </button>
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            </button>
+            {showDropdown && (
+              <div className="absolute top-full mt-2 w-full bg-white rounded-lg border border-gray-200 shadow-lg overflow-hidden z-50">
+                {devices.map(device => (
+                  <button
+                    key={device.deviceId}
+                    onClick={() => { setSelectedDeviceId(device.deviceId); setShowDropdown(false); }}
+                    className={`w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-2 ${
+                      device.deviceId === selectedDeviceId ? "bg-blue-50 text-blue-700" : "text-gray-700"
+                    }`}
+                  >
+                    <Zap className="w-3 h-3" />
+                    {device.name}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
           {/* Settings Button */}
-          <motion.button
+          <button
             onClick={() => setShowSettings(!showSettings)}
-            className="p-2 hover:bg-stone-700 rounded-lg transition-colors"
-            whileHover={{ scale: 1.1, rotate: 90 }}
-            whileTap={{ scale: 0.9 }}
+            className={`p-2 rounded-lg border transition ${
+              showSettings ? "bg-blue-50 border-blue-200 text-blue-600" : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+            }`}
           >
-            <Settings className={`w-5 h-5 ${showSettings ? "text-yellow-400" : "text-stone-400"}`} />
-          </motion.button>
+            <Settings className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
       {/* Main Control Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Power Control Card */}
-        <motion.div
-          className={`panel p-6 rounded-2xl border-2 ${isOn ? "border-yellow-500/50 electric-pulse" : "border-stone-700"}`}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
+        <div className={`bg-white p-6 rounded-lg border ${isOn ? "border-blue-200" : "border-gray-200"}`}>
           <div className="flex items-center justify-between mb-6">
             <div>
-              <p className="text-xs text-stone-500 uppercase tracking-wider flex items-center gap-1">
-                <Zap className="w-3 h-3" /> Power Control
+              <p className="text-xs text-gray-500 uppercase tracking-wide flex items-center gap-1">
+                <Power className="w-3 h-3" /> Power Control
               </p>
-              <h4 className="text-2xl font-bold text-white mt-1 thunder-text">
+              <h4 className="text-xl font-semibold text-gray-900 mt-1">
                 {selectedDevice?.name || "Device"}
               </h4>
-              <p className="text-sm text-stone-400">{selectedDevice?.type || "Smart Device"}</p>
+              <p className="text-sm text-gray-500">{selectedDevice?.type || "Smart Device"}</p>
             </div>
             <ToggleSwitch isOn={isOn} onToggle={handleToggle} />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             {/* Power Reading */}
-            <div className={`p-4 rounded-xl border ${statusColors[getPowerStatus()]}`}>
+            <div className={`p-4 rounded-lg border ${statusColors[getPowerStatus()]}`}>
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-4 h-4" />
-                <span className="text-xs uppercase tracking-wider">Power</span>
+                <span className="text-xs uppercase tracking-wide">Power</span>
               </div>
-              <motion.p className="text-2xl font-bold" key={currentPower} initial={{ scale: 1.2 }} animate={{ scale: 1 }}>
+              <p className="text-xl font-bold">
                 {currentPower.toFixed(0)} W
-              </motion.p>
+              </p>
             </div>
 
             {/* Temperature Reading */}
-            <div className={`p-4 rounded-xl border ${statusColors[getTempStatus()]}`}>
+            <div className={`p-4 rounded-lg border ${statusColors[getTempStatus()]}`}>
               <div className="flex items-center gap-2 mb-2">
                 <Thermometer className="w-4 h-4" />
-                <span className="text-xs uppercase tracking-wider">Temp</span>
+                <span className="text-xs uppercase tracking-wide">Temp</span>
               </div>
-              <motion.p className="text-2xl font-bold" key={currentTemp} initial={{ scale: 1.2 }} animate={{ scale: 1 }}>
+              <p className="text-xl font-bold">
                 {currentTemp.toFixed(1)} °C
-              </motion.p>
+              </p>
             </div>
           </div>
 
           {/* Status */}
-          <div className="mt-4 pt-4 border-t border-stone-700">
+          <div className="mt-4 pt-4 border-t border-gray-100">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-stone-400">Device Status</span>
-              <motion.span
-                className={`px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1 ${
-                  isOn ? "bg-yellow-500/20 text-yellow-400" : "bg-stone-700 text-stone-400"
+              <span className="text-sm text-gray-500">Device Status</span>
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1 ${
+                  isOn ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"
                 }`}
               >
-                <motion.span
-                  className={`w-2 h-2 rounded-full ${isOn ? "bg-yellow-400" : "bg-stone-500"}`}
-                  animate={isOn ? { scale: [1, 1.5, 1] } : {}}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
-                {isOn ? "⚡ CHARGED" : "IDLE"}
-              </motion.span>
+                <span className={`w-2 h-2 rounded-full ${isOn ? "bg-green-500" : "bg-gray-400"}`} />
+                {isOn ? "ACTIVE" : "IDLE"}
+              </span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
         {/* Live Readings Card */}
-        <motion.div className="panel p-6 rounded-2xl" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-          <p className="text-xs text-stone-500 uppercase tracking-wider mb-4 flex items-center gap-1">
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <p className="text-xs text-gray-500 uppercase tracking-wide mb-4 flex items-center gap-1">
             <Activity className="w-3 h-3" /> Live Readings
           </p>
           
@@ -250,12 +231,12 @@ const DeviceControlPanel = ({ devices = [] }) => {
             {/* Voltage */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-yellow-500/20 text-yellow-400">
+                <div className="p-2 rounded-lg bg-blue-50 text-blue-600">
                   <Activity className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-sm text-stone-400">Voltage</p>
-                  <p className="text-lg font-bold text-white">{currentVoltage.toFixed(1)} V</p>
+                  <p className="text-sm text-gray-500">Voltage</p>
+                  <p className="text-lg font-semibold text-gray-900">{currentVoltage.toFixed(1)} V</p>
                 </div>
               </div>
             </div>
@@ -263,12 +244,12 @@ const DeviceControlPanel = ({ devices = [] }) => {
             {/* Current */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-amber-500/20 text-amber-400">
+                <div className="p-2 rounded-lg bg-orange-50 text-orange-600">
                   <Gauge className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-sm text-stone-400">Current</p>
-                  <p className="text-lg font-bold text-white">{currentCurrent.toFixed(2)} A</p>
+                  <p className="text-sm text-gray-500">Current</p>
+                  <p className="text-lg font-semibold text-gray-900">{currentCurrent.toFixed(2)} A</p>
                 </div>
               </div>
             </div>
@@ -276,12 +257,12 @@ const DeviceControlPanel = ({ devices = [] }) => {
             {/* Power Factor */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-orange-500/20 text-orange-400">
+                <div className="p-2 rounded-lg bg-purple-50 text-purple-600">
                   <Zap className="w-4 h-4" />
                 </div>
                 <div>
-                  <p className="text-sm text-stone-400">Power Factor</p>
-                  <p className="text-lg font-bold text-white">
+                  <p className="text-sm text-gray-500">Power Factor</p>
+                  <p className="text-lg font-semibold text-gray-900">
                     {currentVoltage && currentCurrent ? Math.min(1, currentPower / (currentVoltage * currentCurrent)).toFixed(2) : "N/A"}
                   </p>
                 </div>
@@ -291,101 +272,88 @@ const DeviceControlPanel = ({ devices = [] }) => {
 
           {/* Alerts Section */}
           {(getPowerStatus() !== "normal" || getTempStatus() !== "normal") && (
-            <motion.div
-              className="mt-4 p-4 rounded-xl bg-red-500/10 border border-red-500/30"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="flex items-center gap-2 text-red-400 mb-2">
+            <div className="mt-4 p-4 rounded-lg bg-red-50 border border-red-200">
+              <div className="flex items-center gap-2 text-red-700 mb-2">
                 <AlertTriangle className="w-4 h-4" />
-                <span className="text-sm font-semibold">⚠️ ALERT!</span>
+                <span className="text-sm font-semibold">Alert</span>
               </div>
-              <ul className="space-y-1 text-sm text-red-300">
-                {getPowerStatus() !== "normal" && <li>⚡ Power: {currentPower.toFixed(0)}W</li>}
-                {getTempStatus() !== "normal" && <li>🔥 Temperature: {currentTemp.toFixed(1)}°C</li>}
+              <ul className="space-y-1 text-sm text-red-600">
+                {getPowerStatus() !== "normal" && <li>Power: {currentPower.toFixed(0)}W exceeds threshold</li>}
+                {getTempStatus() !== "normal" && <li>Temperature: {currentTemp.toFixed(1)}°C exceeds threshold</li>}
               </ul>
-            </motion.div>
+            </div>
           )}
-        </motion.div>
+        </div>
       </div>
 
       {/* Threshold Settings Panel */}
-      <AnimatePresence>
-        {showSettings && (
-          <motion.div
-            className="panel p-6 rounded-2xl border border-yellow-500/30"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-          >
-            <h4 className="text-sm font-semibold text-yellow-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-              <Settings className="w-4 h-4" /> ⚡ Threshold Configuration
-            </h4>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">Power Warning (W)</label>
-                <input 
-                  type="number" 
-                  value={thresholds.powerWarning} 
-                  onChange={(e) => setThresholds(p => ({...p, powerWarning: +e.target.value}))}
-                  className="w-full px-4 py-2 bg-stone-900 border border-stone-700 rounded-lg text-white focus:border-yellow-500 focus:outline-none" 
-                />
-              </div>
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">Power Critical (W)</label>
-                <input 
-                  type="number" 
-                  value={thresholds.powerCritical} 
-                  onChange={(e) => setThresholds(p => ({...p, powerCritical: +e.target.value}))}
-                  className="w-full px-4 py-2 bg-stone-900 border border-stone-700 rounded-lg text-white focus:border-red-500 focus:outline-none" 
-                />
-              </div>
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">Temp Warning (°C)</label>
-                <input 
-                  type="number" 
-                  value={thresholds.tempWarning} 
-                  onChange={(e) => setThresholds(p => ({...p, tempWarning: +e.target.value}))}
-                  className="w-full px-4 py-2 bg-stone-900 border border-stone-700 rounded-lg text-white focus:border-yellow-500 focus:outline-none" 
-                />
-              </div>
-              <div>
-                <label className="text-xs text-stone-500 block mb-1">Temp Critical (°C)</label>
-                <input 
-                  type="number" 
-                  value={thresholds.tempCritical} 
-                  onChange={(e) => setThresholds(p => ({...p, tempCritical: +e.target.value}))}
-                  className="w-full px-4 py-2 bg-stone-900 border border-stone-700 rounded-lg text-white focus:border-red-500 focus:outline-none" 
-                />
-              </div>
+      {showSettings && (
+        <div className="bg-white p-6 rounded-lg border border-gray-200">
+          <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4 flex items-center gap-2">
+            <Settings className="w-4 h-4" /> Threshold Configuration
+          </h4>
+          
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div>
+              <label className="text-xs text-gray-500 block mb-1">Power Warning (W)</label>
+              <input 
+                type="number" 
+                value={thresholds.powerWarning} 
+                onChange={(e) => setThresholds(p => ({...p, powerWarning: +e.target.value}))}
+                className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" 
+              />
             </div>
+            <div>
+              <label className="text-xs text-gray-500 block mb-1">Power Critical (W)</label>
+              <input 
+                type="number" 
+                value={thresholds.powerCritical} 
+                onChange={(e) => setThresholds(p => ({...p, powerCritical: +e.target.value}))}
+                className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none" 
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 block mb-1">Temp Warning (°C)</label>
+              <input 
+                type="number" 
+                value={thresholds.tempWarning} 
+                onChange={(e) => setThresholds(p => ({...p, tempWarning: +e.target.value}))}
+                className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:border-yellow-500 focus:ring-1 focus:ring-yellow-500 focus:outline-none" 
+              />
+            </div>
+            <div>
+              <label className="text-xs text-gray-500 block mb-1">Temp Critical (°C)</label>
+              <input 
+                type="number" 
+                value={thresholds.tempCritical} 
+                onChange={(e) => setThresholds(p => ({...p, tempCritical: +e.target.value}))}
+                className="w-full px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg text-gray-900 focus:border-red-500 focus:ring-1 focus:ring-red-500 focus:outline-none" 
+              />
+            </div>
+          </div>
 
-            <motion.button
-              onClick={async () => { 
-                setIsSaving(true); 
-                await new Promise(r => setTimeout(r, 1000)); 
-                setIsSaving(false); 
-                setShowSettings(false); 
-              }}
-              disabled={isSaving}
-              className="mt-4 px-6 py-3 bg-gradient-to-r from-yellow-400 to-amber-500 text-stone-900 font-bold rounded-lg flex items-center gap-2"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              {isSaving ? (
-                <div className="pokeball-spinner" />
-              ) : (
-                <>
-                  <Save className="w-5 h-5" />
-                  Save Thresholds
-                </>
-              )}
-            </motion.button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
+          <button
+            onClick={async () => { 
+              setIsSaving(true); 
+              await new Promise(r => setTimeout(r, 1000)); 
+              setIsSaving(false); 
+              setShowSettings(false); 
+            }}
+            disabled={isSaving}
+            className="mt-4 px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center gap-2 transition disabled:opacity-50"
+          >
+            {isSaving ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                <Save className="w-4 h-4" />
+                Save Thresholds
+              </>
+            )}
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -56,30 +56,30 @@ const Reports = () => {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <Filters value={filters} onChange={setFilters} devices={devices} />
-      <div className="flex items-center justify-between">
-        <h3 className="text-xl text-white font-semibold">Energy Reports</h3>
-        <div className="flex items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <h3 className="text-lg sm:text-xl text-gray-900 font-semibold">Energy Reports</h3>
+        <div className="flex items-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={downloadPdf}
-            className="px-4 py-2 rounded-xl bg-amber-500/20 text-amber-200 text-xs uppercase tracking-[0.35em]"
+            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg bg-orange-600 text-white text-xs sm:text-sm font-medium hover:bg-orange-700 transition-colors"
           >
             Export PDF
           </button>
           <button
             type="button"
             onClick={download}
-            className="px-4 py-2 rounded-xl bg-cyan-500/20 text-cyan-200 text-xs uppercase tracking-[0.35em]"
+            className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg bg-blue-600 text-white text-xs sm:text-sm font-medium hover:bg-blue-700 transition-colors"
           >
             Export CSV
           </button>
         </div>
       </div>
       <UsageBarChart data={series} />
-      <div className="panel p-4 rounded-2xl">
-        <p className="text-sm text-stone-300">
+      <div className="bg-white border border-gray-200 p-3 sm:p-4 rounded-lg">
+        <p className="text-xs sm:text-sm text-gray-600">
           Use the filters to generate hourly, daily, and monthly reports. The export uses
           the same date range.
         </p>

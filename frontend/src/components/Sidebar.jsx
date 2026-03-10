@@ -1,15 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { Zap, LayoutDashboard, Cpu, FileText } from "lucide-react";
+import { LayoutDashboard, Cpu, FileText, Activity, X } from "lucide-react";
 
-const NavItem = ({ to, label, icon: Icon }) => (
+const NavItem = ({ to, label, icon: Icon, onClick }) => (
   <NavLink
     to={to}
+    onClick={onClick}
     className={({ isActive }) =>
-      `flex items-center gap-3 px-4 py-3 rounded-xl text-sm uppercase tracking-widest transition ${
+      `flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition ${
         isActive
-          ? "bg-amber-500/25 text-amber-300 thunder-border electric-pulse font-bold"
-          : "text-stone-300 hover:bg-amber-500/15 hover:text-amber-200"
+          ? "bg-blue-600 text-white"
+          : "text-gray-700 hover:bg-gray-100"
       }`
     }
   >
@@ -18,49 +19,51 @@ const NavItem = ({ to, label, icon: Icon }) => (
   </NavLink>
 );
 
-const Sidebar = () => (
-  <aside className="panel min-h-screen p-6 hidden lg:flex flex-col gap-6 border-r-2 border-amber-500/30">
-    {/* Pikachu Image */}
-    <div className="text-center">
-      <img 
-        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png" 
-        alt="Pikachu" 
-        className="w-24 h-24 mx-auto drop-shadow-lg hover:scale-110 transition-transform duration-300"
-        style={{ filter: 'drop-shadow(0 0 15px rgba(251, 191, 36, 0.6))' }}
-      />
-      <p className="text-xs text-amber-400 uppercase tracking-[0.3em] mt-2">Pokemon</p>
-      <h1 className="text-2xl font-bold thunder-text mt-1">Thunder Core</h1>
-      <p className="text-xs text-stone-400 mt-1">IoT Power Monitor</p>
+const Sidebar = ({ onClose }) => (
+  <aside className="bg-white h-full min-h-screen p-4 sm:p-6 flex flex-col gap-6 border-r border-gray-200 w-full">
+    {/* Header with Logo and Close Button */}
+    <div className="flex items-center justify-between pb-4 border-b border-gray-200">
+      <div className="flex items-center gap-3">
+        <img 
+          src="/logo.png" 
+          alt="Logo" 
+          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover shadow-md" 
+        />
+        <div className="lg:hidden">
+          <h1 className="text-base font-bold text-gray-900">IEMS</h1>
+          <p className="text-xs text-gray-500">Energy Monitor</p>
+        </div>
+      </div>
+      {/* Close button - mobile only */}
+      <button 
+        onClick={onClose}
+        className="lg:hidden p-2 rounded-lg hover:bg-gray-100 text-gray-500"
+      >
+        <X className="w-5 h-5" />
+      </button>
     </div>
 
     {/* Navigation */}
-    <nav className="flex flex-col gap-2">
-      <NavItem to="/" label="Dashboard" icon={LayoutDashboard} />
-      <NavItem to="/devices" label="Devices" icon={Cpu} />
-      <NavItem to="/reports" label="Reports" icon={FileText} />
+    <nav className="flex flex-col gap-1">
+      <NavItem to="/" label="Dashboard" icon={LayoutDashboard} onClick={onClose} />
+      <NavItem to="/devices" label="Devices" icon={Cpu} onClick={onClose} />
+      <NavItem to="/reports" label="Reports" icon={FileText} onClick={onClose} />
     </nav>
 
     {/* Status Footer */}
-    <div className="mt-auto panel-thunder p-4 rounded-xl">
-      <div className="flex items-center gap-2 text-amber-400 mb-2">
-        <Zap className="w-4 h-4 zap-icon" />
-        <span className="text-xs uppercase tracking-wider font-semibold">System Status</span>
+    <div className="mt-auto bg-gray-50 p-4 rounded-lg border border-gray-200">
+      <div className="flex items-center gap-2 text-gray-700 mb-2">
+        <Activity className="w-4 h-4" />
+        <span className="text-xs font-semibold">System Status</span>
       </div>
-      <p className="text-sm text-green-400 flex items-center gap-2 font-medium">
-        <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+      <p className="text-sm text-green-600 flex items-center gap-2">
+        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
         All sensors online
       </p>
-      <div className="mt-2 h-2 bg-stone-700 rounded-full overflow-hidden">
-        <div className="h-full energy-bar" style={{width: '75%'}}></div>
+      <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-full bg-blue-600 rounded-full transition-all" style={{width: '75%'}}></div>
       </div>
-      <p className="text-xs text-stone-400 mt-1 font-medium">Power Level: 75%</p>
-      
-      {/* Tamil Nadu TNEB Badge */}
-      <div className="mt-3 text-center">
-        <span className="text-xs bg-amber-900/50 text-amber-300 px-2 py-1 rounded-full border border-amber-500/50">
-          🇮🇳 Tamil Nadu TNEB
-        </span>
-      </div>
+      <p className="text-xs text-gray-500 mt-1">System Load: 75%</p>
     </div>
   </aside>
 );

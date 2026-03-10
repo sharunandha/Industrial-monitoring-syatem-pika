@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Devices from "./pages/Devices";
@@ -9,46 +9,50 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import { getToken } from "./services/auth";
 
-// Floating Lightning Bolts Component
-const FloatingLightning = () => (
-  <div className="fixed inset-0 pointer-events-none z-50 overflow-hidden">
-    {[...Array(6)].map((_, i) => (
-      <motion.div
-        key={i}
-        className="absolute text-2xl text-yellow-400"
-        style={{
-          left: `${10 + i * 15}%`,
-          top: "-50px",
-        }}
-        animate={{
-          y: ["0vh", "110vh"],
-          x: [0, Math.sin(i) * 50, 0],
-          opacity: [0, 0.6, 0.6, 0],
-          rotate: [0, 360],
-        }}
-        transition={{
-          duration: 8 + i * 2,
-          repeat: Infinity,
-          delay: i * 1.5,
-          ease: "linear",
-        }}
-      >
-        ⚡
-      </motion.div>
-    ))}
-  </div>
-);
+const Layout = ({ children }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-const Layout = ({ children }) => (
-  <div className="min-h-screen grid lg:grid-cols-[260px_1fr] relative">
-    <FloatingLightning />
-    <Sidebar />
-    <div className="flex flex-col">
-      <Topbar />
-      <main className="flex-1 p-6 lg:p-8 grid-pattern">{children}</main>
+  return (
+    <div className="min-h-screen relative">
+      {/* Fixed Background Image */}
+      <div 
+        className="fixed inset-0 z-0"
+        style={{ 
+          backgroundImage: "url('/background.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}
+      />
+      
+      <div className="min-h-screen flex flex-col lg:grid lg:grid-cols-[260px_1fr] relative z-10">
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+        
+        {/* Sidebar - Mobile Slide-in */}
+        <div className={`
+          fixed inset-y-0 left-0 z-50 w-72 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:w-auto
+          ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+        `}>
+          <Sidebar onClose={() => setSidebarOpen(false)} />
+        </div>
+        
+        {/* Main Content */}
+        <div className="flex flex-col flex-1 min-w-0">
+          <Topbar onMenuClick={() => setSidebarOpen(true)} />
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 overflow-x-hidden">
+            {children}
+          </main>
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const RequireAuth = ({ children }) => {
   const token = getToken();
